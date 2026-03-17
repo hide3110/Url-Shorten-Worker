@@ -1,100 +1,287 @@
 <!doctype html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta http-equiv="content-type" content="txt/html; charset=utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <title>Net Journal</title>
   <link rel="stylesheet" href="https://hide3110.github.io/Url-Shorten-Worker/styles.css">
   <!-- 如果使用CDN资源就放开这一句, 把上面那一句注释掉
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hide3110/Url-Shorten-Worker/styles.css">
   -->
+
+  <style>
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f8f9fa;
+    }
+
+    .page-wrap {
+      width: 100%;
+      max-width: 100%;
+      padding: 12px;
+    }
+
+    .layout {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .layout > .card {
+      flex: 1 1 420px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin: 0;
+    }
+
+    .card,
+    .card-body,
+    .card-text,
+    .modal-content,
+    .modal-body,
+    .form-control,
+    .input-group,
+    .list-group-item {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    label {
+      display: inline-block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    textarea.form-control {
+      min-height: 220px;
+      resize: vertical;
+    }
+
+    #html-preview,
+    #result,
+    #urlList,
+    #urlList .form-control,
+    .modal-body,
+    .form-control {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    #html-preview {
+      min-height: 60px;
+      white-space: normal;
+    }
+
+    #html-preview pre,
+    #result pre,
+    #urlList pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
+    }
+
+    #html-preview code,
+    #result code,
+    #urlList code {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #html-preview img,
+    #result img,
+    #urlList img,
+    #html-preview iframe,
+    #result iframe,
+    #urlList iframe,
+    #html-preview table,
+    #result table,
+    #urlList table {
+      max-width: 100%;
+    }
+
+    #html-preview table,
+    #result table,
+    #urlList table {
+      display: block;
+      overflow-x: auto;
+    }
+
+    #urlList .list-group-item,
+    #urlList > div {
+      overflow: hidden;
+    }
+
+    .modal-dialog {
+      max-width: min(92vw, 600px);
+      margin: 1rem auto;
+    }
+
+    @media (max-width: 991.98px) {
+      .page-wrap {
+        padding: 10px;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .layout > .card {
+        margin-bottom: 1rem;
+      }
+
+      .input-group {
+        flex-wrap: wrap;
+      }
+
+      .input-group > .form-control,
+      .input-group > .input-group-text,
+      .input-group > .btn {
+        width: 100%;
+        flex: 0 0 100%;
+        border-radius: var(--bs-border-radius) !important;
+        margin-bottom: 0.5rem;
+      }
+
+      .input-group > *:last-child {
+        margin-bottom: 0;
+      }
+
+      .card-body {
+        padding: 1rem;
+      }
+
+      textarea.form-control {
+        min-height: 180px;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      body {
+        font-size: 16px;
+      }
+
+      .card-header,
+      .card-body,
+      .card-footer {
+        padding-left: 0.9rem;
+        padding-right: 0.9rem;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <div class="d-flex align-items-start flex-wrap">
+  <div class="page-wrap">
+    <div class="layout">
 
-    <div class="card shadow m-3">
-      <h5 class="card-header">Load 1 KV</h5>
-      <div class="card-body">
-        <h5 class="card-title"> </h5>  
-        <div class="input-group mb-3">
-          <label>Key</label>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Input 1 key" id="keyForQuery">
-            <button class="btn btn-info" type="button" onclick='query1KV()' id="qryBtn">Load</button>
+      <div class="card shadow">
+        <h5 class="card-header">Load 1 KV</h5>
+        <div class="card-body">
+          <h5 class="card-title"> </h5>
+          <div class="mb-3">
+            <label for="keyForQuery">Key</label>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Input 1 key" id="keyForQuery">
+              <button class="btn btn-info" type="button" onclick="query1KV()" id="qryBtn">Load</button>
+            </div>
           </div>
-        </div>  
+        </div>
       </div>
-    </div>
 
-    <div class="card shadow m-3">
-      <h5 class="card-header">短链系统变身日记本NetJournal</h5>
-      <div class="card-body">
-        <h5 class="card-title"> </h5>
+      <div class="card shadow">
+        <h5 class="card-header">短链系统变身日记本 NetJournal</h5>
+        <div class="card-body">
+          <h5 class="card-title"> </h5>
 
-        <div class="input-group mb-3">
-          <label>记事本内容 Value</label>
-          <form class="input-group mb-3">
-            <textarea class="form-control" id="longURL" placeholder="输入文本 Input MarkDown" oninput="loadUrlList()"></textarea>
-          </form>
+          <div class="mb-3">
+            <label for="longURL">记事本内容 Value</label>
+            <div class="input-group">
+              <textarea class="form-control" id="longURL" placeholder="输入文本 Input MarkDown" oninput="loadUrlList()"></textarea>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="keyPhrase">记事本密码 Key</label>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon2">记事本密码 Key</span>
+              <input type="text" class="form-control" id="keyPhrase" aria-describedby="basic-addon2" placeholder="">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <button class="btn btn-primary" type="button" onclick="shorturl()" id="addBtn">保存 Save</button>
+          </div>
+
+          <div class="mb-3">
+            <label for="passwordText">本系统密码 Password</label>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon3">本系统密码 Password</span>
+              <input class="form-control" type="text" value="__PASSWORD__" readonly="true" id="passwordText" aria-describedby="basic-addon3">
+            </div>
+          </div>
         </div>
 
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon2">记事本密码 Key</span>
-          <input type="text" class="form-control" id="keyPhrase" aria-describedby="basic-addon2" placeholder="">
+        <div class="card-footer">
+          <span><a href="https://github.com/hide3110/Url-Shorten-Worker/" target="_self">Fork me on GitHub</a></span>
         </div>
-
-        <div class="input-group mb-3">
-          <button class="btn btn-primary" type="button" onclick='shorturl()' id="addBtn">保存 Save</button>
-        </div>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="basic-addon3">本系统密码 Password</span>
-          <input class="form-control" type="text" value="__PASSWORD__" readonly="true" id="passwordText" aria-describedby="basic-addon3">
-        </div>
-
       </div>
-      
-      <div class="card-footer">
-        <span> <a href="https://github.com/hide3110/Url-Shorten-Worker/" target="_self">Fork me on GitHub</a> </span>
-      </div>
-    </div>
 
-    <div class="card shadow m-3">
-      <h5 class="card-header">View MarkDown</h5>
-      <div class="card-body">
-        <h5 class="card-title"> </h5>
-        <div class="form-control" id="html-preview"></div>
-      </div>
-    </div>
-
-    <div class="card shadow m-3">
-      <h5 class="card-header">LocalStorage List</h5>
-      <div class="card-body">
-        <h5 class="card-title"> </h5>
-        <div class="input-group mb-3">
-          <button class="btn btn-success" type="button" onclick='loadUrlList()' id="loadListBtn">load localStorage</button>
-          <button class="btn btn-danger" type="button" onclick='clearLocalStorage()' id="clearlocalStgBtn">clear localStorage</button>
-          <button class="btn btn-info" type="button" onclick='loadKV()' id="loadKV2localStgBtn">load KV to localStorage</button>
+      <div class="card shadow">
+        <h5 class="card-header">View MarkDown</h5>
+        <div class="card-body">
+          <h5 class="card-title"> </h5>
+          <div class="form-control" id="html-preview"></div>
         </div>
+      </div>
 
-        <div class="card-text">
-          <div classs="list-group" id="urlList">
-            <div class="mb-3 list-group-item">
-              <div class="input-group">
-                <button type="button" class="btn btn-danger" onclick='deleteShortUrl("4sure")' id="delBtn-4sure">X</button>
-                <button type="button" class="btn btn-info" onclick='queryVisitCount("4sure")' id="qryCntBtn-4sure">?</button>
-                <span class="form-control">https://1way.eu.org/4sure</span>
-              </div>
-              <div class="form-control">
-                https://en.y2mate.is/s36/youtube-to-mp3.html
+      <div class="card shadow">
+        <h5 class="card-header">LocalStorage List</h5>
+        <div class="card-body">
+          <h5 class="card-title"> </h5>
+
+          <div class="input-group mb-3">
+            <button class="btn btn-success" type="button" onclick="loadUrlList()" id="loadListBtn">load localStorage</button>
+            <button class="btn btn-danger" type="button" onclick="clearLocalStorage()" id="clearlocalStgBtn">clear localStorage</button>
+            <button class="btn btn-info" type="button" onclick="loadKV()" id="loadKV2localStgBtn">load KV to localStorage</button>
+          </div>
+
+          <div class="card-text">
+            <div class="list-group" id="urlList">
+              <div class="mb-3 list-group-item">
+                <div class="input-group">
+                  <button type="button" class="btn btn-danger" onclick='deleteShortUrl("4sure")' id="delBtn-4sure">X</button>
+                  <button type="button" class="btn btn-info" onclick='queryVisitCount("4sure")' id="qryCntBtn-4sure">?</button>
+                  <span class="form-control">https://1way.eu.org/4sure</span>
+                </div>
+                <div class="form-control">
+                  https://en.y2mate.is/s36/youtube-to-mp3.html
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 
   <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
@@ -128,17 +315,20 @@
       const htmlPreview = document.getElementById('html-preview');
       htmlPreview.innerHTML = marked.parse(markdownContent);
     }
+
     document.getElementById('longURL').addEventListener('input', syncMarkDownView);
-    
+
     function buildValueMarkdown(longUrl) {
-      let valueMarkdown = document.createElement('div')
-      valueMarkdown.classList.add("form-control", "rounded-top-0")  
-      valueMarkdown.innerHTML = marked.parse(longUrl)
-      return valueMarkdown
+      let valueMarkdown = document.createElement('div');
+      valueMarkdown.classList.add("form-control", "rounded-top-0");
+      valueMarkdown.style.overflowWrap = "anywhere";
+      valueMarkdown.style.wordBreak = "break-word";
+      valueMarkdown.innerHTML = marked.parse(longUrl);
+      return valueMarkdown;
     }
 
     // 函数变量的定义和使用请见main.js
-    buildValueItemFunc = buildValueMarkdown
+    buildValueItemFunc = buildValueMarkdown;
   </script>
 </body>
 </html>
